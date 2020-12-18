@@ -1,0 +1,6 @@
+.content{
+  position: absolute;
+  top: 60vh;
+  width: 50vw;
+  transform: translate(-50%,-50%);
+}

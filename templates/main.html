@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/main4.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class='footer'>
+        <div class="left">
+            <div class="content">
+
+                <div class="row4">
+                    <form id="form1" action="/get_image" enctype="multipart/form-data" method="post" runat="server">
+                        <div class="img-comp-container">
+                            <div class="img-comp-img">
+                                <img id="blah" src="../static/demo.jpg" alt="your image" width='300' height='200' />
+                                <!-- <img src="img_snow.jpg" width="300" height="200"> -->
+                            </div>
+                            <div class="img-comp-img img-comp-overlay">
+                                <div class="right">
+                                    <div class="content" id="content">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type='file' id="imgInp" name="imgInp" />
+                        <input id='retrieve' type="submit" />
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+        form {
+            position: absolute;
+            top: 100px;
+            width: 50vw;
+            /* transform: translate(-50%, -50%); */
+        }
+    </style>
+    <script>
+        $(document).ready(function (e) {
+            $('#form1').on('submit', (function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                console.log(formData)
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+
+                        decodeImg(data);
+                    },
+                    error: function (data) {
+                        console.log("error");
+                        console.log(data);
+                    }
+                });
+            }));
+
+
+        });
+
+
+
+        function decodeImg(img_string) {
+            var src = "data:image/jpeg;base64,";
+            src += img_string;
+            console.log("kimochi");
+            console.log(src);
+            var newImage = document.createElement('img');
+            newImage.src = src;
+            newImage.style = 'width:300px;height:200px;'
+            document.querySelector('#content').innerHTML = newImage.outerHTML;//where to insert your image
+        }
+
+        function readURL(input) {
+
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#blah').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+
+
+    </script>
+</body>
+
+</html>
